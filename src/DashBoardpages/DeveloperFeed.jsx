@@ -10,6 +10,7 @@ const DeveloperFeed = () => {
   const [sortBy, setSortBy] = useState('trending');
   const [selectedTech, setSelectedTech] = useState('');
   const [likes, setLikes] = useState({});
+  const [showOnlyJobs, setShowOnlyJobs] = useState(false);
 
   const categories = ['All', 'AI', 'Frontend', 'Backend', 'Full Stack', 'Mobile'];
   
@@ -26,8 +27,14 @@ const DeveloperFeed = () => {
   const processedFeed = useMemo(() => {
     let filtered = feedData;
 
+    // Jobs filter
+    if (showOnlyJobs) {
+      // Show only job postings (posts from recruiters/companies)
+      filtered = filtered.filter(item => item.category === 'Jobs' || item.type === 'job');
+    }
+
     // Category filter
-    if (selectedCategory !== 'All') {
+    if (selectedCategory !== 'All' && !showOnlyJobs) {
       filtered = filtered.filter(item => item.category === selectedCategory);
     }
 
@@ -64,7 +71,7 @@ const DeveloperFeed = () => {
     }
 
     return sorted;
-  }, [selectedCategory, searchQuery, sortBy, selectedTech]);
+  }, [selectedCategory, searchQuery, sortBy, selectedTech, showOnlyJobs]);
 
   // Get trending posts (top 3)
   const trendingPosts = useMemo(() => {
@@ -96,8 +103,8 @@ const DeveloperFeed = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-6">
-        <div className="relative">
+      <div className="mb-6 flex gap-3">
+        <div className="relative flex-1">
           <input
             type="text"
             placeholder="Search projects, developers, or technologies..."
@@ -107,9 +114,21 @@ const DeveloperFeed = () => {
           />
           <span className="absolute left-3 top-3.5 text-gray-400">🔍</span>
         </div>
+        <button
+          onClick={() => setShowOnlyJobs(!showOnlyJobs)}
+          className={`px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
+            showOnlyJobs
+              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg hover:shadow-xl'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+          }`}
+        >
+          <span>💼</span>
+          Jobs
+        </button>
       </div>
 
-      {/* Filters Section */}
+      {/* Filters Section - Hide when showing jobs */}
+      {!showOnlyJobs && (
       <div className="mb-6 space-y-4">
         {/* Category Filter */}
         <div>
@@ -179,6 +198,36 @@ const DeveloperFeed = () => {
           </p>
         </div>
       </div>
+      )}
+
+      {/* Jobs Section - Show when Jobs button is active */}
+      {showOnlyJobs && (
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-3xl">💼</span>
+            <h2 className="text-2xl font-bold text-blue-900">Job Opportunities</h2>
+          </div>
+          <p className="text-blue-700 mb-4">Find exciting career opportunities and growth with top companies</p>
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="Search jobs by title, company, location..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-2 border border-blue-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+              <option value="trending">📈 Most Relevant</option>
+              <option value="newest">✨ Newest</option>
+              <option value="mostViewed">👁️ Most Viewed</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* Trending Section */}
       {selectedCategory === 'All' && !searchQuery && !selectedTech && sortBy === 'trending' && (
@@ -248,7 +297,23 @@ const DeveloperFeed = () => {
 
       {/* Empty State */}
       {processedFeed.length === 0 ? (
-        <NoFeed />
+        showOnlyJobs ? (
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-12 text-center">
+            <div className="text-6xl mb-4">💼</div>
+            <h3 className="text-2xl font-bold text-blue-900 mb-2">No Jobs Available Yet</h3>
+            <p className="text-blue-700 mb-6">
+              Check back soon for exciting job opportunities from top companies. In the meantime, explore amazing projects in the feed!
+            </p>
+            <button
+              onClick={() => setShowOnlyJobs(false)}
+              className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-bold hover:shadow-lg transition"
+            >
+              ← Back to Projects
+            </button>
+          </div>
+        ) : (
+          <NoFeed />
+        )
       ) : (
         /* Feed Items */
         <div className="space-y-5">
