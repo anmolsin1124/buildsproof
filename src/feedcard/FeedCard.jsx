@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   toggleLike, 
   isPostLiked, 
@@ -10,6 +11,11 @@ import {
 } from '../utils/feedInteractions';
 
 const FeedCard = ({ post }) => {
+  const navigate = useNavigate();
+
+  const handleUserProfileClick = () => {
+    navigate(`/user/${post.id}`);
+  };
   // Initialize interactions on mount
   useEffect(() => {
     initializeInteractions();
@@ -54,18 +60,18 @@ const FeedCard = ({ post }) => {
       {/* Header */}
       <div className="p-5 border-b border-gray-100 bg-linear-to-r from-gray-50 to-white">
         <div className="flex items-center gap-3 justify-between">
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center gap-3 flex-1 cursor-pointer" onClick={handleUserProfileClick}>
             <div className="relative">
               <img 
                 src={post.userAvatar} 
                 alt={post.userName} 
-                className="w-14 h-14 rounded-full object-cover border-2 border-green-200"
+                className="w-14 h-14 rounded-full object-cover border-2 border-green-200 hover:border-green-400 transition"
               />
               <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full w-4 h-4 border-2 border-white"></div>
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-gray-900 text-sm">{post.userName}</h3>
+                <h3 className="font-bold text-gray-900 text-sm hover:text-green-600 transition">{post.userName}</h3>
                 <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">Following</span>
               </div>
               <p className="text-xs text-gray-600 font-medium">{post.userTitle || 'Developer'}</p>
@@ -130,7 +136,6 @@ const FeedCard = ({ post }) => {
             </button>
           </div>
         </div>
-      )}
       )}
 
       {/* Stats Bar */}

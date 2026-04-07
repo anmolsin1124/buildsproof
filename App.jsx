@@ -7,6 +7,7 @@ import AuthPage from "./src/components/AuthPage";
 import RolePage from "./src/components/RolePage";
 import DeveloperProfilePage from "./src/components/DeveloperProfilePage";
 import RecruiterProfilePage from "./src/components/RecruiterProfilePage";
+import UserProfilePage from "./src/components/UserProfilePage";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/developer-profile" element={<DeveloperProfilePage />} />
                 <Route path="/developer-dashboard" element={<DeveloperDashboard />} />
                 <Route path="/recruiter-profile" element={<RecruiterProfilePage />} />
+                <Route path="/user/:userId" element={<UserProfilePage />} />
             </Routes>
         </Router>
     )
