@@ -24,6 +24,9 @@ const DashBoard = () => {
             <div className="flex gap-4">
               <button onClick={() => navigate('/login')} className="border-2 border-green-500  text-green-500 px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-500 hover:text-white transition cursor-pointer">Get Started</button>
               <button className="border-2 border-green-500 text-green-500 px-8 py-3 rounded-lg font-bold text-lg hover:bg-green-500 hover:text-white transition cursor-pointer">Explore Projects</button>
+              <button className="border-2 border-blue-500 text-blue-500 px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-500 hover:text-white transition cursor-pointer flex items-center gap-2">
+                <span>💼</span> Browse Jobs
+              </button>
             </div>
             <button className="border-2 bg-green-500 border-green-500 text-white px-31 py-3 rounded-lg font-bold text-lg hover:bg-white hover:text-green-500 transition cursor-pointer w-fit">Prove your Skill</button>
           </div>
