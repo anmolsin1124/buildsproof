@@ -34,12 +34,6 @@ const DashBoard = () => {
               >
                 Explore Projects
               </button>
-              <button 
-                onClick={() => navigate('/developer-dashboard')} 
-                className="border-2 border-blue-500 bg-blue-50 text-blue-600 px-8 py-3 rounded-lg font-bold text-lg hover:bg-blue-500 hover:text-white transition cursor-pointer shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <span>💼</span> Browse Jobs
-              </button>
             </div>
             <button 
               onClick={() => navigate('/login')}
