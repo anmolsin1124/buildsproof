@@ -3,19 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import '../index.css';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { setUserRole } from '../utils/roleUtils';
+import { HelpCard } from './OnboardingHints';
 
 const RolePage = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
   };
 
-  const handleContinue = () => {
-    if (selectedRole) {
-      // Store the role
-      localStorage.setItem('userRole', selectedRole);
+  const handleContinue = async () => {
+    if (!selectedRole) {
+      alert('Please select a role to continue');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Save role to storage
+      setUserRole(selectedRole);
       
       // Navigate based on role
       if (selectedRole === 'developer') {
@@ -23,8 +32,10 @@ const RolePage = () => {
       } else if (selectedRole === 'recruiter') {
         navigate('/recruiter-profile');
       }
-    } else {
-      alert('Please select a role to continue');
+    } catch (error) {
+      console.error('Error setting role:', error);
+      alert('Failed to set role. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -101,15 +112,27 @@ const RolePage = () => {
           <div className="mt-10 flex justify-center">
             <button
               onClick={handleContinue}
-              disabled={!selectedRole}
-              className={`w-full sm:w-64 py-3 px-6 rounded-lg font-semibold text-white transition ${
-                selectedRole
+              disabled={!selectedRole || loading}
+              className={`w-full sm:w-64 py-3 px-6 rounded-lg font-semibold text-white transition flex items-center justify-center gap-2 ${
+                selectedRole && !loading
                   ? 'bg-green-500 hover:bg-green-600 cursor-pointer shadow-md'
                   : 'bg-gray-300 cursor-not-allowed'
               }`}
             >
-              Continue
+              {loading && (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              )}
+              <span>{loading ? 'Setting up...' : 'Continue'}</span>
             </button>
+          </div>
+
+          {/* Help Text */}
+          <div className="mt-8">
+            <HelpCard
+              type="info"
+              title="Can I change my role later?"
+              content="Yes! You can switch between Developer and Recruiter roles anytime in your settings. No data is lost permanently."
+            />
           </div>
         </div>
       </div>

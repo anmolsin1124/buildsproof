@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { feedData } from '../data/feedData';
+import { NoFeed } from '../components/EmptyStates';
 
 const DeveloperFeed = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -37,9 +38,13 @@ const DeveloperFeed = () => {
         ))}
       </div>
 
-      {/* Feed Items */}
-      <div className="space-y-6">
-        {filteredFeed.map((post) => (
+      {/* Empty State */}
+      {filteredFeed.length === 0 ? (
+        <NoFeed />
+      ) : (
+        /* Feed Items */
+        <div className="space-y-6">
+          {filteredFeed.map((post) => (
           <div key={post.id} className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-lg transition">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
@@ -115,7 +120,8 @@ const DeveloperFeed = () => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

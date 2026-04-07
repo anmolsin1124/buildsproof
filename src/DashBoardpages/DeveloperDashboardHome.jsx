@@ -4,9 +4,11 @@ import FeedCard from '../feedcard/FeedCard';
 import HRCard from '../feedcard/HRCard';
 import HrData from '../data/HrData';
 import FeedCarousel from '../components/FeedCarousel';
+import { DeveloperOnboarding, HelpCard } from '../components/OnboardingHints';
 
 const DeveloperDashboardHome = ({ profileData }) => {
   const [feedFilter, setFeedFilter] = useState('all'); // all, developer, hiring
+  const [dismissedOnboarding, setDismissedOnboarding] = useState(false);
   
   const projectImages = [
     'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=300&fit=crop',
@@ -22,13 +24,26 @@ const DeveloperDashboardHome = ({ profileData }) => {
       {/* Main Content */}
       <div className="lg:col-span-2 space-y-8">
         {/* Welcome Section with CTA */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-2xl p-8 text-white shadow-lg">
+        <div className="bg-linear-to-r from-green-600 to-emerald-500 rounded-2xl p-8 text-white shadow-lg">
           <h1 className="text-4xl font-black mb-2">Welcome back, {profileData?.firstName || 'Developer'} 👋</h1>
           <p className="text-green-50 text-lg mb-6">Ready to build and showcase your skills?</p>
           <button className="bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-green-50 transition flex items-center gap-2">
             <span>+ Share Your Project</span>
           </button>
         </div>
+
+        {/* Getting Started Section - dismissible */}
+        {!dismissedOnboarding && (
+          <div className="relative bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <button
+              onClick={() => setDismissedOnboarding(true)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✕
+            </button>
+            <DeveloperOnboarding />
+          </div>
+        )}
 
         {/* Feed Section - Mixed Developer & HR Posts */}
         <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-lg overflow-hidden">
@@ -47,7 +62,7 @@ const DeveloperDashboardHome = ({ profileData }) => {
                 onClick={() => setFeedFilter('all')}
                 className={`px-4 py-2 rounded-lg font-bold text-sm transition ${
                   feedFilter === 'all'
-                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
+                    ? 'bg-linear-to-r from-green-600 to-emerald-600 text-white shadow-lg'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
