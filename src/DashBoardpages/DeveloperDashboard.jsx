@@ -9,7 +9,6 @@ import DeepFilterSection from '../components/DeepFilterSection';
 import DeveloperDashboardHome from './DeveloperDashboardHome';
 import DeveloperProjects from './DeveloperProjects';
 import DeveloperProblems from './DeveloperProblems';
-import DeveloperBookmarks from './DeveloperBookmarks';
 import DeveloperAnalytics from './DeveloperAnalytics';
 import DeveloperAchievements from './DeveloperAchievements';
 import DeveloperProfile from './DeveloperProfile';
@@ -99,17 +98,6 @@ const DeveloperDashboard = () => {
             >
               <span className="text-xl flex-shrink-0">🧩</span>
               <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Solve Problems</span>
-            </div>
-            <div
-              onClick={() => setActiveTab('bookmarks')}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
-                activeTab === 'bookmarks'
-                  ? 'bg-green-100 text-green-700'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <span className="text-xl flex-shrink-0">🔖</span>
-              <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Bookmarks</span>
             </div>
             <div
               onClick={() => setActiveTab('analytics')}
@@ -244,7 +232,7 @@ const DeveloperDashboard = () => {
                   { id: 'dashboard', label: 'Dashboard', icon: '📊' },
                   { id: 'projects', label: 'Projects', icon: '📁' },
                   { id: 'problems', label: 'Problems', icon: '🧩' },
-                  { id: 'bookmarks', label: 'Bookmarks', icon: '🔖' },
+
                   { id: 'analytics', label: 'Analytics', icon: '📈' },
                   { id: 'achievements', label: 'Trophies', icon: '🏆' },
                   { id: 'jobs', label: 'Jobs', icon: '💼' },
@@ -298,7 +286,6 @@ const DeveloperDashboard = () => {
             {activeTab === 'dashboard' && <DeveloperDashboardHome profileData={profileData} />}
             {activeTab === 'projects' && <DeveloperProjects />}
             {activeTab === 'problems' && <DeveloperProblems />}
-            {activeTab === 'bookmarks' && <DeveloperBookmarks />}
             {activeTab === 'analytics' && <DeveloperAnalytics />}
             {activeTab === 'achievements' && <DeveloperAchievements />}
             {activeTab === 'jobs' && <DeveloperFeed />}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const DeveloperAchievements = () => {
+  const [activeTab, setActiveTab] = useState('achievements');
   const [achievements, setAchievements] = useState({
     masterArchitect: { unlocked: true, progress: 100, earned: true },
     firstBlood: { unlocked: true, progress: 100, earned: true },
@@ -16,6 +17,8 @@ const DeveloperAchievements = () => {
     guardian: { unlocked: false, progress: 80, earned: false },
     collaborator: { unlocked: false, progress: 70, earned: false },
   });
+
+  const [bookmarks, setBookmarks] = useState([]);
 
   const achievementsList = [
     { emoji: '🏆', title: 'First Blood', desc: 'Completed 10 projects in 3 months', locked: 0, condition: '0/1' },
@@ -40,13 +43,41 @@ const DeveloperAchievements = () => {
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-12">
-        <h1 className="text-4xl font-black text-gray-900 mb-3">🏅 Achievements</h1>
-        <p className="text-gray-600 text-lg max-w-3xl">
-          Celebrate your milestones and track your progress through our comprehensive achievement system.
-        </p>
+      {/* Header with Tabs */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-black text-gray-900 mb-6">🏅 Achievements & Bookmarks</h1>
+        
+        {/* Tab Navigation */}
+        <div className="flex gap-4 border-b-2 border-gray-200">
+          <button
+            onClick={() => setActiveTab('achievements')}
+            className={`px-6 py-3 font-bold text-lg transition-all border-b-4 ${
+              activeTab === 'achievements'
+                ? 'text-green-600 border-green-600'
+                : 'text-gray-600 border-transparent hover:text-gray-900'
+            }`}
+          >
+            🏆 Achievements
+          </button>
+          <button
+            onClick={() => setActiveTab('bookmarks')}
+            className={`px-6 py-3 font-bold text-lg transition-all border-b-4 ${
+              activeTab === 'bookmarks'
+                ? 'text-blue-600 border-blue-600'
+                : 'text-gray-600 border-transparent hover:text-gray-900'
+            }`}
+          >
+            🔖 Bookmarks
+          </button>
+        </div>
       </div>
+
+      {/* Achievements Tab */}
+      {activeTab === 'achievements' && (
+        <>
+      <p className="text-gray-600 text-lg max-w-3xl mb-8">
+        Celebrate your milestones and track your progress through our comprehensive achievement system.
+      </p>
 
       {/* Latest Achievement & Community Proof Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
@@ -217,6 +248,49 @@ const DeveloperAchievements = () => {
           </div>
         </div>
       </div>
+        </>
+      )}
+
+      {/* Bookmarks Tab */}
+      {activeTab === 'bookmarks' && (
+        <div>
+          {bookmarks.length === 0 ? (
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-12 text-center">
+              <div className="inline-block">
+                <div className="text-6xl mb-4">🔖</div>
+                <h2 className="text-2xl font-bold text-blue-900 mb-2">No Bookmarks Yet</h2>
+                <p className="text-blue-700 mb-6 font-semibold">
+                  Start bookmarking your favorite problems and projects to access them quickly!
+                </p>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition flex items-center gap-2 mx-auto">
+                  <span>➕</span> Start Bookmarking
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {bookmarks.map((bookmark, idx) => (
+                <div key={idx} className="bg-white rounded-2xl border-2 border-blue-200 p-6 hover:shadow-lg transition">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 flex-1">{bookmark.title}</h3>
+                    <button className="text-blue-600 hover:text-blue-700 transition">
+                      <span className="text-2xl">🔖</span>
+                    </button>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">{bookmark.desc}</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {bookmark.tags?.map((tag, i) => (
+                      <span key={i} className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
