@@ -3,10 +3,20 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../index.css';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { FormError, SuccessMessage, LoadingButton } from './FormFeedback';
+import { validateField, validateForm } from '../utils/validation';
+import { setAuthUser, getAuthUser } from '../utils/authUtils';
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Check if already logged in
+  useEffect(() => {
+    if (getAuthUser()) {
+      navigate('/role');
+    }
+  }, [navigate]);
   
   // Determine if should show login or signup based on the route
   const shouldShowLogin = location.pathname === '/login' || location.pathname === '/auth';
@@ -17,6 +27,8 @@ const AuthPage = () => {
     email: '',
     password: '',
   });
+  const [loginErrors, setLoginErrors] = useState({});
+  const [loginLoading, setLoginLoading] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // Signup State
@@ -27,6 +39,8 @@ const AuthPage = () => {
     confirmPassword: '',
     acceptTerms: false,
   });
+  const [signupErrors, setSignupErrors] = useState({});
+  const [signupLoading, setSignupLoading] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -34,12 +48,40 @@ const AuthPage = () => {
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
+    // Clear error when user starts typing
+    if (loginErrors[name]) {
+      setLoginErrors({ ...loginErrors, [name]: null });
+    }
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', loginData);
-    // Add your login logic here
+    
+    // Validate fields
+    const { isFormValid, errors } = validateForm(loginData, ['email', 'password']);
+    if (!isFormValid) {
+      setLoginErrors(errors);
+      return;
+    }
+    
+    setLoginLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Store login data
+      setAuthUser({
+        email: loginData.email,
+        fullName: 'User',
+        isLoggedIn: true,
+      });
+      
+      navigate('/role');
+    } catch (error) {
+      setLoginErrors({ submit: 'Login failed. Please try again.' });
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   // Signup Handlers
@@ -49,17 +91,50 @@ const AuthPage = () => {
       ...signupData,
       [name]: type === 'checkbox' ? checked : value,
     });
+    // Clear error when user starts typing
+    if (signupErrors[name]) {
+      setSignupErrors({ ...signupErrors, [name]: null });
+    }
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate fields
+    const fieldsToValidate = ['fullName', 'email', 'password'];
+    const { isFormValid, errors } = validateForm(signupData, fieldsToValidate);
+    
+    // Additional validations
     if (signupData.password !== signupData.confirmPassword) {
-      alert('Passwords do not match!');
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    if (!signupData.acceptTerms) {
+      errors.acceptTerms = 'You must accept the Terms of Service';
+    }
+    
+    if (!isFormValid || Object.keys(errors).length > 0) {
+      setSignupErrors(errors);
       return;
     }
-    // Store user data and navigate to role page
-    localStorage.setItem('userData', JSON.stringify(signupData));
-    navigate('/role');
+    
+    setSignupLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Store user data
+      setAuthUser({
+        fullName: signupData.fullName,
+        email: signupData.email,
+        isLoggedIn: true,
+      });
+      
+      navigate('/role');
+    } catch (error) {
+      setSignupErrors({ submit: 'Signup failed. Please try again.' });
+    } finally {
+      setSignupLoading(false);
+    }
   };
 
   return (
@@ -101,6 +176,14 @@ const AuthPage = () => {
                 <p className="text-gray-600 text-sm">Sign in to BuildProof to continue</p>
               </div>
 
+              {/* Error Alert */}
+              {loginErrors.submit && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                  <span className="text-xl">⚠️</span>
+                  <p className="text-red-700 text-sm">{loginErrors.submit}</p>
+                </div>
+              )}
+
               {/* Login Form */}
               <form className="space-y-5" onSubmit={handleLoginSubmit}>
                 {/* Email Input */}
@@ -115,9 +198,12 @@ const AuthPage = () => {
                     value={loginData.email}
                     onChange={handleLoginChange}
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                    className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                      loginErrors.email ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     required
                   />
+                  <FormError message={loginErrors.email} />
                 </div>
 
                 {/* Password Input */}
@@ -133,7 +219,9 @@ const AuthPage = () => {
                       value={loginData.password}
                       onChange={handleLoginChange}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                      className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                        loginErrors.password ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       required
                     />
                     <button
@@ -144,6 +232,7 @@ const AuthPage = () => {
                       {showLoginPassword ? '👁️' : '👁️'}
                     </button>
                   </div>
+                  <FormError message={loginErrors.password} />
                 </div>
 
                 {/* Remember Me & Forgot Password */}
@@ -161,12 +250,14 @@ const AuthPage = () => {
                 </div>
 
                 {/* Sign In Button */}
-                <button
+                <LoadingButton
                   type="submit"
-                  className="w-full bg-green-600 text-white py-3 text-base rounded-lg font-bold hover:bg-green-700 transition cursor-pointer mt-8 shadow-md"
+                  loading={loginLoading}
+                  disabled={loginLoading}
+                  className="w-full bg-green-600 text-white py-3 text-base rounded-lg font-bold hover:bg-green-700 hover:disabled:bg-green-600 transition cursor-pointer mt-8 shadow-md"
                 >
                   Sign In
-                </button>
+                </LoadingButton>
 
                 {/* Divider */}
                 <div className="relative py-4">
@@ -210,6 +301,14 @@ const AuthPage = () => {
                 <p className="text-gray-600 text-sm">Create your account and start showcasing your work</p>
               </div>
 
+              {/* Error Alert */}
+              {signupErrors.submit && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+                  <span className="text-xl">⚠️</span>
+                  <p className="text-red-700 text-sm">{signupErrors.submit}</p>
+                </div>
+              )}
+
               {/* Signup Form */}
               <form className="space-y-5" onSubmit={handleSignupSubmit}>
                 {/* Full Name Input */}
@@ -224,9 +323,12 @@ const AuthPage = () => {
                     value={signupData.fullName}
                     onChange={handleSignupChange}
                     placeholder="John Doe"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                    className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                      signupErrors.fullName ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     required
                   />
+                  <FormError message={signupErrors.fullName} />
                 </div>
 
                 {/* Email Input */}
@@ -241,9 +343,12 @@ const AuthPage = () => {
                     value={signupData.email}
                     onChange={handleSignupChange}
                     placeholder="you@example.com"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                    className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                      signupErrors.email ? 'border-red-500' : 'border-gray-300'
+                    }`}
                     required
                   />
+                  <FormError message={signupErrors.email} />
                 </div>
 
                 {/* Password Input */}
@@ -259,7 +364,9 @@ const AuthPage = () => {
                       value={signupData.password}
                       onChange={handleSignupChange}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                      className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                        signupErrors.password ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       required
                     />
                     <button
@@ -270,7 +377,8 @@ const AuthPage = () => {
                       {showSignupPassword ? '👁️' : '👁️'}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1.5">Minimum 8 characters</p>
+                  <FormError message={signupErrors.password} />
+                  <p className="text-xs text-gray-500 mt-1.5">Minimum 2 characters</p>
                 </div>
 
                 {/* Confirm Password Input */}
@@ -286,7 +394,9 @@ const AuthPage = () => {
                       value={signupData.confirmPassword}
                       onChange={handleSignupChange}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50"
+                      className={`w-full px-4 py-3 text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-gray-50 ${
+                        signupErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                      }`}
                       required
                     />
                     <button
@@ -297,10 +407,11 @@ const AuthPage = () => {
                       {showConfirmPassword ? '👁️' : '👁️'}
                     </button>
                   </div>
+                  <FormError message={signupErrors.confirmPassword} />
                 </div>
 
                 {/* Terms & Conditions */}
-                <label className="flex items-start cursor-pointer">
+                <label className="flex items-start cursor-pointer gap-3">
                   <input
                     type="checkbox"
                     name="acceptTerms"
@@ -309,7 +420,7 @@ const AuthPage = () => {
                     className="w-4 h-4 text-green-500 border-gray-300 rounded focus:ring-green-500 cursor-pointer mt-1"
                     required
                   />
-                  <span className="ml-3 text-xs text-gray-600 leading-relaxed">
+                  <span className="text-xs text-gray-600 leading-relaxed">
                     I agree to the{' '}
                     <a href="#" className="text-green-600 hover:text-green-700 font-medium">
                       Terms of Service
@@ -320,14 +431,17 @@ const AuthPage = () => {
                     </a>
                   </span>
                 </label>
+                <FormError message={signupErrors.acceptTerms} />
 
                 {/* Sign Up Button */}
-                <button
+                <LoadingButton
                   type="submit"
-                  className="w-full bg-green-600 text-white py-3 text-base rounded-lg font-bold hover:bg-green-700 transition cursor-pointer mt-8 shadow-md"
+                  loading={signupLoading}
+                  disabled={signupLoading}
+                  className="w-full bg-green-600 text-white py-3 text-base rounded-lg font-bold hover:bg-green-700 hover:disabled:bg-green-600 transition cursor-pointer mt-8 shadow-md"
                 >
                   Create Account
-                </button>
+                </LoadingButton>
 
                 {/* Divider */}
                 <div className="relative py-4">

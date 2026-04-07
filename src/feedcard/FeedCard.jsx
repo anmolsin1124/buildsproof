@@ -1,14 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { 
+  toggleLike, 
+  isPostLiked, 
+  toggleBookmark, 
+  isPostBookmarked,
+  addComment,
+  getComments,
+  initializeInteractions 
+} from '../utils/feedInteractions';
 
 const FeedCard = ({ post }) => {
+  // Initialize interactions on mount
+  useEffect(() => {
+    initializeInteractions();
+  }, []);
+
   const [isExpanded, setIsExpanded] = useState(false);
-  const [likes, setLikes] = useState(post.likes || 0);
-  const [liked, setLiked] = useState(false);
-  const [commented, setCommented] = useState(false);
+  const [liked, setLiked] = useState(() => isPostLiked(post.id));
+  const [bookmarked, setBookmarked] = useState(() => isPostBookmarked(post.id));
+  const [showComments, setShowComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComments] = useState(() => getComments(post.id));
+
+  // Calculate dynamic likes count
+  const likesCount = liked ? (post.likes || 0) + 1 : (post.likes || 0);
 
   const handleLike = () => {
-    setLiked(!liked);
-    setLikes(liked ? likes - 1 : likes + 1);
+    const newLikedState = toggleLike(post.id);
+    setLiked(newLikedState);
+  };
+
+  const handleBookmark = () => {
+    const newBookmarkedState = toggleBookmark(post.id);
+    setBookmarked(newBookmarkedState);
+  };
+
+  const handleAddComment = () => {
+    if (commentText.trim()) {
+      addComment(post.id, commentText, 'You');
+      setComments(getComments(post.id));
+      setCommentText('');
+    }
   };
 
   const MAX_DESCRIPTION_LENGTH = 150;
@@ -20,7 +52,7 @@ const FeedCard = ({ post }) => {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden w-full max-w-2xl">
       {/* Header */}
-      <div className="p-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+      <div className="p-5 border-b border-gray-100 bg-linear-to-r from-gray-50 to-white">
         <div className="flex items-center gap-3 justify-between">
           <div className="flex items-center gap-3 flex-1">
             <div className="relative">
@@ -75,7 +107,7 @@ const FeedCard = ({ post }) => {
             {post.techStack.slice(0, 4).map((tech, idx) => (
               <span
                 key={idx}
-                className="bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full border border-green-200 hover:border-green-400 transition cursor-pointer"
+                className="bg-linear-to-r from-green-50 to-emerald-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full border border-green-200 hover:border-green-400 transition cursor-pointer"
               >
                 {tech}
               </span>
@@ -92,26 +124,60 @@ const FeedCard = ({ post }) => {
             alt="Project preview" 
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
             <button className="bg-white text-green-600 px-6 py-2 rounded-lg font-bold text-sm hover:bg-green-50 transition shadow-lg flex items-center gap-2">
               <span>▶</span> View Project
             </button>
           </div>
         </div>
       )}
+      )}
 
       {/* Stats Bar */}
-      {(likes > 0 || post.comments > 0 || post.views > 0) && (
+      {(likesCount > 0 || comments.length > 0 || post.views > 0) && (
         <div className="px-5 py-3 border-t border-gray-100 bg-gray-50 flex justify-between text-sm font-semibold text-gray-600">
           <span className="flex items-center gap-1">
-            <span className="text-red-500">❤️</span> {likes} likes
+            <span className="text-red-500">❤️</span> {likesCount} likes
           </span>
           <span className="flex items-center gap-1">
             <span>👁️</span> {post.views || 0} views
           </span>
           <span className="flex items-center gap-1">
-            <span>💬</span> {post.comments} comments
+            <span>💬</span> {comments.length + (post.comments || 0)} comments
           </span>
+        </div>
+      )}
+
+      {/* Comments Section */}
+      {showComments && (
+        <div className="px-5 py-4 border-t border-gray-100 bg-gray-50 max-h-64 overflow-y-auto">
+          <div className="space-y-3 mb-4">
+            {comments.map((comment) => (
+              <div key={comment.id} className="bg-white p-3 rounded-lg">
+                <p className="font-semibold text-sm text-gray-900">{comment.author}</p>
+                <p className="text-sm text-gray-700 mt-1">{comment.text}</p>
+                <p className="text-xs text-gray-400 mt-1">{new Date(comment.timestamp).toLocaleDateString()}</p>
+              </div>
+            ))}
+          </div>
+          {/* Add Comment Input */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+              placeholder="Add a comment..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <button
+              onClick={handleAddComment}
+              disabled={!commentText.trim()}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            >
+              Post
+            </button>
+          </div>
         </div>
       )}
 
@@ -129,9 +195,9 @@ const FeedCard = ({ post }) => {
           <span>Like</span>
         </button>
         <button 
-          onClick={() => setCommented(!commented)}
+          onClick={() => setShowComments(!showComments)}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-bold text-sm transition ${
-            commented
+            showComments
               ? 'text-blue-600 bg-blue-50'
               : 'text-gray-600 hover:bg-gray-100'
           }`}
@@ -139,13 +205,20 @@ const FeedCard = ({ post }) => {
           <span>💬</span>
           <span>Comment</span>
         </button>
-        <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-bold text-sm text-gray-600 hover:bg-gray-100 transition">
-          <span>🔄</span>
-          <span>Repost</span>
+        <button 
+          onClick={handleBookmark}
+          className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-bold text-sm transition ${
+            bookmarked
+              ? 'text-yellow-600 bg-yellow-50'
+              : 'text-gray-600 hover:bg-gray-100'
+          }`}
+        >
+          <span>{bookmarked ? '🔖' : '📌'}</span>
+          <span>Save</span>
         </button>
         <button className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-bold text-sm text-gray-600 hover:bg-gray-100 transition">
           <span>✉️</span>
-          <span>Send</span>
+          <span>Share</span>
         </button>
       </div>
     </div>
