@@ -14,6 +14,7 @@ import DeveloperAnalytics from './DeveloperAnalytics';
 import DeveloperAchievements from './DeveloperAchievements';
 import DeveloperProfile from './DeveloperProfile';
 import DeveloperSettings from './DeveloperSettings';
+import DeveloperFeed from './DeveloperFeed';
 
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
@@ -144,6 +145,17 @@ const DeveloperDashboard = () => {
               <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Profile</span>
             </div>
             <div
+              onClick={() => setActiveTab('jobs')}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
+                activeTab === 'jobs'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <span className="text-xl flex-shrink-0">💼</span>
+              <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Jobs</span>
+            </div>
+            <div
               onClick={() => setActiveTab('settings')}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
                 activeTab === 'settings'
@@ -235,6 +247,7 @@ const DeveloperDashboard = () => {
                   { id: 'bookmarks', label: 'Bookmarks', icon: '🔖' },
                   { id: 'analytics', label: 'Analytics', icon: '📈' },
                   { id: 'achievements', label: 'Trophies', icon: '🏆' },
+                  { id: 'jobs', label: 'Jobs', icon: '💼' },
                   { id: 'profile', label: 'Profile', icon: '👤' },
                   { id: 'settings', label: 'Settings', icon: '⚙️' },
                 ].map((tab) => (
@@ -288,6 +301,7 @@ const DeveloperDashboard = () => {
             {activeTab === 'bookmarks' && <DeveloperBookmarks />}
             {activeTab === 'analytics' && <DeveloperAnalytics />}
             {activeTab === 'achievements' && <DeveloperAchievements />}
+            {activeTab === 'jobs' && <DeveloperFeed />}
             {activeTab === 'profile' && <DeveloperProfile profileData={profileData} onProfileUpdate={handleProfileUpdate} />}
             {activeTab === 'settings' && <DeveloperSettings onLogout={handleLogout} />}
           </div>
