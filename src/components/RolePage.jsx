@@ -39,6 +39,26 @@ const RolePage = () => {
     }
   };
 
+  const handleSkipToDashboard = async () => {
+    if (!selectedRole) {
+      alert('Please select a role to continue');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Save role to storage
+      setUserRole(selectedRole);
+      
+      // Go directly to dashboard
+      navigate('/developer-dashboard');
+    } catch (error) {
+      console.error('Error setting role:', error);
+      alert('Failed to set role. Please try again.');
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col min-h-screen bg-gray-50">
       <Navbar />
@@ -109,11 +129,11 @@ const RolePage = () => {
           </div>
 
           {/* Continue Button */}
-          <div className="mt-10 flex justify-center">
+          <div className="mt-10 flex flex-col gap-3">
             <button
               onClick={handleContinue}
               disabled={!selectedRole || loading}
-              className={`w-full sm:w-64 py-3 px-6 rounded-lg font-semibold text-white transition flex items-center justify-center gap-2 ${
+              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition flex items-center justify-center gap-2 ${
                 selectedRole && !loading
                   ? 'bg-green-500 hover:bg-green-600 cursor-pointer shadow-md'
                   : 'bg-gray-300 cursor-not-allowed'
@@ -122,7 +142,19 @@ const RolePage = () => {
               {loading && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               )}
-              <span>{loading ? 'Setting up...' : 'Continue'}</span>
+              <span>{loading ? 'Setting up...' : 'Continue to Profile Setup'}</span>
+            </button>
+            
+            <button
+              onClick={handleSkipToDashboard}
+              disabled={!selectedRole || loading}
+              className={`w-full py-2.5 px-6 rounded-lg font-semibold transition flex items-center justify-center gap-2 ${
+                selectedRole && !loading
+                  ? 'bg-gray-200 text-gray-800 hover:bg-gray-300 cursor-pointer'
+                  : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              <span>Skip & Go to Dashboard</span>
             </button>
           </div>
 

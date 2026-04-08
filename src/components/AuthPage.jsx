@@ -10,10 +10,12 @@ import { setAuthUser, getAuthUser } from '../utils/authUtils';
 const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [redirecting, setRedirecting] = useState(false);
   
   // Check if already logged in
   useEffect(() => {
     if (getAuthUser()) {
+      setRedirecting(true);
       navigate('/role');
     }
   }, [navigate]);
@@ -76,10 +78,10 @@ const AuthPage = () => {
         isLoggedIn: true,
       });
       
+      setRedirecting(true);
       navigate('/role');
     } catch (error) {
       setLoginErrors({ submit: 'Login failed. Please try again.' });
-    } finally {
       setLoginLoading(false);
     }
   };
@@ -129,16 +131,26 @@ const AuthPage = () => {
         isLoggedIn: true,
       });
       
+      setRedirecting(true);
       navigate('/role');
     } catch (error) {
       setSignupErrors({ submit: 'Signup failed. Please try again.' });
-    } finally {
       setSignupLoading(false);
     }
   };
 
   return (
     <div className="w-full flex flex-col min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
+      {/* Redirecting Overlay */}
+      {redirecting && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 text-center">
+            <div className="w-12 h-12 border-4 border-green-200 border-t-green-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg font-semibold text-gray-900">Redirecting to role selection...</p>
+          </div>
+        </div>
+      )}
+      
       <Navbar />
       
       <div className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
