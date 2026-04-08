@@ -1,4 +1,5 @@
 👨‍💻 Author
+hello
 
 Anmol Singh
 B.Tech Data Science Student
@@ -7,7 +8,6 @@ B.Tech Data Science Student
 💡 Focused on learning, building, and scaling projects
 
 ---
-
 
 🚀 BuildProof
 
@@ -51,21 +51,21 @@ BuildProof is a modern developer platform where developers can showcase real pro
 src/
 │
 ├── components/
-│   ├── feed/
-│   ├── profile/
-│   ├── dashboard/
-│   └── common/
+│ ├── feed/
+│ ├── profile/
+│ ├── dashboard/
+│ └── common/
 │
 ├── pages/
-│   ├── developer/
-│   └── recruiter/
+│ ├── developer/
+│ └── recruiter/
 │
 ├── data/
-│   ├── usersData.js
-│   └── feedData.js
+│ ├── usersData.js
+│ └── feedData.js
 │
 ├── routes/
-│   └── AppRoutes.jsx
+│ └── AppRoutes.jsx
 │
 └── App.jsx
 
