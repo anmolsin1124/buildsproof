@@ -10,10 +10,10 @@ import DeveloperDashboardHome from './DeveloperDashboardHome';
 import DeveloperProjects from './DeveloperProjects';
 import DeveloperProblems from './DeveloperProblems';
 import DeveloperAnalytics from './DeveloperAnalytics';
-import DeveloperAchievements from './DeveloperAchievements';
 import DeveloperProfile from './DeveloperProfile';
 import DeveloperSettings from './DeveloperSettings';
 import DeveloperFeed from './DeveloperFeed';
+import DeveloperFreelance from './DeveloperFreelance';
 
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
@@ -111,17 +111,6 @@ const DeveloperDashboard = () => {
               <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Analytics</span>
             </div>
             <div
-              onClick={() => setActiveTab('achievements')}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
-                activeTab === 'achievements'
-                  ? 'bg-green-100 text-green-700'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <span className="text-xl flex-shrink-0">🏆</span>
-              <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Achievements</span>
-            </div>
-            <div
               onClick={() => setActiveTab('profile')}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
                 activeTab === 'profile'
@@ -142,6 +131,17 @@ const DeveloperDashboard = () => {
             >
               <span className="text-xl flex-shrink-0">💼</span>
               <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Jobs</span>
+            </div>
+            <div
+              onClick={() => setActiveTab('freelance')}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer font-semibold transition whitespace-nowrap ${
+                activeTab === 'freelance'
+                  ? 'bg-purple-100 text-purple-700'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <span className="text-xl flex-shrink-0">💻</span>
+              <span className={`${sidebarHovered ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>Freelance</span>
             </div>
             <div
               onClick={() => setActiveTab('settings')}
@@ -234,7 +234,6 @@ const DeveloperDashboard = () => {
                   { id: 'problems', label: 'Problems', icon: '🧩' },
 
                   { id: 'analytics', label: 'Analytics', icon: '📈' },
-                  { id: 'achievements', label: 'Trophies', icon: '🏆' },
                   { id: 'jobs', label: 'Jobs', icon: '💼' },
                   { id: 'profile', label: 'Profile', icon: '👤' },
                   { id: 'settings', label: 'Settings', icon: '⚙️' },
@@ -288,7 +287,7 @@ const DeveloperDashboard = () => {
             {activeTab === 'problems' && <DeveloperProblems />}
             {activeTab === 'analytics' && <DeveloperAnalytics />}
             {activeTab === 'achievements' && <DeveloperAchievements />}
-            {activeTab === 'jobs' && <DeveloperFeed />}
+            {activeTab === 'freelance' && <DeveloperFreelance />}
             {activeTab === 'profile' && <DeveloperProfile profileData={profileData} onProfileUpdate={handleProfileUpdate} />}
             {activeTab === 'settings' && <DeveloperSettings onLogout={handleLogout} />}
           </div>

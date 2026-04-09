@@ -32,9 +32,9 @@ const HRCard = ({ job }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-sm hover:shadow-2xl hover:border-blue-300 transition-all duration-300 overflow-hidden max-w-2xl w-full">
+    <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-sm hover:shadow-2xl hover:border-green-300 transition-all duration-300 overflow-hidden max-w-2xl w-full">
       {/* Header with Company Info */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b-2 border-gray-200">
+      <div className="bg-linear-to-r from-green-50 to-emerald-50 p-6 border-b-2 border-gray-200">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             {/* Company Logo */}
@@ -44,7 +44,7 @@ const HRCard = ({ job }) => {
                 alt={job.companyName}
                 className="w-16 h-16 rounded-xl object-cover border-2 border-white shadow-md"
               />
-              <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <div className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                 💼
               </div>
             </div>
@@ -52,7 +52,7 @@ const HRCard = ({ job }) => {
             {/* Company & Job Info */}
             <div className="flex-1">
               <h2 className="text-2xl font-black text-gray-900">{job.jobTitle}</h2>
-              <p className="text-sm font-bold text-blue-600 mt-1">{job.companyName}</p>
+              <p className="text-sm font-bold text-green-600 mt-1">{job.companyName}</p>
               
               {/* Location & Type */}
               <div className="flex flex-wrap gap-3 mt-2">

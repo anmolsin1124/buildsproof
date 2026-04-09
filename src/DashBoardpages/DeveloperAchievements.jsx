@@ -18,7 +18,43 @@ const DeveloperAchievements = () => {
     collaborator: { unlocked: false, progress: 70, earned: false },
   });
 
-  const [bookmarks, setBookmarks] = useState([]);
+  const [bookmarks, setBookmarks] = useState([
+    {
+      id: 1,
+      title: 'Two Sum Problem',
+      desc: 'Classic LeetCode problem - Find two numbers that add up to target',
+      tags: ['Array', 'Easy', 'Coding'],
+      type: 'problem',
+    },
+    {
+      id: 2,
+      title: 'E-Commerce Platform',
+      desc: 'Full-stack MERN project with payment integration and admin dashboard',
+      tags: ['React', 'Node.js', 'MongoDB', 'Project'],
+      type: 'project',
+    },
+    {
+      id: 3,
+      title: 'Binary Tree Traversal',
+      desc: 'Learn all traversal methods for binary trees - DFS, BFS',
+      tags: ['Trees', 'Medium', 'Coding'],
+      type: 'problem',
+    },
+    {
+      id: 4,
+      title: 'Weather App',
+      desc: 'React app that fetches real-time weather using OpenWeather API',
+      tags: ['React', 'API', 'Project'],
+      type: 'project',
+    },
+    {
+      id: 5,
+      title: 'Dynamic Programming Guide',
+      desc: 'Complete guide to solving DP problems step by step',
+      tags: ['DP', 'Hard', 'Learning'],
+      type: 'problem',
+    },
+  ]);
 
   const achievementsList = [
     { emoji: '🏆', title: 'First Blood', desc: 'Completed 10 projects in 3 months', locked: 0, condition: '0/1' },
@@ -63,7 +99,7 @@ const DeveloperAchievements = () => {
             onClick={() => setActiveTab('bookmarks')}
             className={`px-6 py-3 font-bold text-lg transition-all border-b-4 ${
               activeTab === 'bookmarks'
-                ? 'text-blue-600 border-blue-600'
+                ? 'text-green-600 border-green-600'
                 : 'text-gray-600 border-transparent hover:text-gray-900'
             }`}
           >
@@ -109,7 +145,7 @@ const DeveloperAchievements = () => {
                   <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
                     ✓ Unlocked
                   </span>
-                  <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">
+                  <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
                     ⭐ Recently earned
                   </span>
                 </div>
@@ -254,37 +290,65 @@ const DeveloperAchievements = () => {
       {/* Bookmarks Tab */}
       {activeTab === 'bookmarks' && (
         <div>
+          <p className="text-gray-600 text-lg mb-8">
+            📌 {bookmarks.length} saved items - Your curated collection of problems and projects
+          </p>
+
           {bookmarks.length === 0 ? (
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-12 text-center">
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-12 text-center">
               <div className="inline-block">
                 <div className="text-6xl mb-4">🔖</div>
-                <h2 className="text-2xl font-bold text-blue-900 mb-2">No Bookmarks Yet</h2>
-                <p className="text-blue-700 mb-6 font-semibold">
+                <h2 className="text-2xl font-bold text-green-900 mb-2">No Bookmarks Yet</h2>
+                <p className="text-green-700 mb-6 font-semibold">
                   Start bookmarking your favorite problems and projects to access them quickly!
                 </p>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition flex items-center gap-2 mx-auto">
+                <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold transition flex items-center gap-2 mx-auto">
                   <span>➕</span> Start Bookmarking
                 </button>
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bookmarks.map((bookmark, idx) => (
-                <div key={idx} className="bg-white rounded-2xl border-2 border-blue-200 p-6 hover:shadow-lg transition">
+              {bookmarks.map((bookmark) => (
+                <div key={bookmark.id} className="bg-white rounded-2xl border-2 border-green-200 p-6 hover:shadow-lg transition hover:border-green-400">
+                  {/* Header */}
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-lg font-bold text-gray-900 flex-1">{bookmark.title}</h3>
-                    <button className="text-blue-600 hover:text-blue-700 transition">
-                      <span className="text-2xl">🔖</span>
+                    <div className="flex items-center gap-3 flex-1">
+                      <span className="text-3xl">
+                        {bookmark.type === 'project' ? '📁' : '🎯'}
+                      </span>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">{bookmark.title}</h3>
+                        <span className="text-xs font-semibold text-green-600 uppercase">
+                          {bookmark.type}
+                        </span>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setBookmarks(bookmarks.filter(b => b.id !== bookmark.id))}
+                      className="text-green-600 hover:text-red-600 transition text-2xl"
+                      title="Remove bookmark"
+                    >
+                      🔖
                     </button>
                   </div>
+
+                  {/* Description */}
                   <p className="text-gray-600 text-sm mb-4">{bookmark.desc}</p>
+
+                  {/* Tags */}
                   <div className="flex gap-2 flex-wrap">
                     {bookmark.tags?.map((tag, i) => (
-                      <span key={i} className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">
+                      <span key={i} className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">
                         {tag}
                       </span>
                     ))}
                   </div>
+
+                  {/* Action Button */}
+                  <button className="w-full mt-4 py-2 px-4 bg-green-100 text-green-600 font-bold rounded-lg hover:bg-green-200 transition">
+                    📖 Open
+                  </button>
                 </div>
               ))}
             </div>

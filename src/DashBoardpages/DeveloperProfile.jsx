@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SettingsSection } from '../components/SettingsSection';
 
 const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -195,6 +196,7 @@ const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
             { id: 'projects', label: 'Projects (3)' },
             { id: 'bookmarks', label: 'Bookmarks (8)' },
             { id: 'activity', label: 'Activity' },
+            { id: 'settings', label: 'Settings' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -212,8 +214,9 @@ const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className={`grid gap-8 ${activeTab === 'settings' ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-3'}`}>
         {/* Left Sidebar */}
+        {activeTab !== 'settings' && (
         <div className="space-y-6">
           {/* About Card */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -301,9 +304,10 @@ const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
             </div>
           </div>
         </div>
+        )}
 
         {/* Center Content */}
-        <div className="lg:col-span-1">
+        <div className={`${activeTab === 'settings' ? 'col-span-full' : 'lg:col-span-1'}`}>
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-900">Recent Feed / Projects</h2>
@@ -382,9 +386,16 @@ const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
               <p className="text-gray-500 text-sm">Your recent activities will appear here</p>
             </div>
           )}
+
+          {activeTab === 'settings' && (
+            <div className="lg:col-span-2">
+              <SettingsSection />
+            </div>
+          )}
         </div>
 
         {/* Right Sidebar */}
+        {activeTab !== 'settings' && (
         <div className="space-y-6">
           {/* Tech Stack */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -460,6 +471,7 @@ const DeveloperProfile = ({ profileData, onProfileUpdate }) => {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

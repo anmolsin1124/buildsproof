@@ -71,13 +71,13 @@ const ConnectionSection = () => {
                       <div className="flex gap-2 flex-shrink-0">
                         <button
                           onClick={() => acceptConnection(req.id)}
-                          className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs rounded transition"
+                          className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded transition"
                         >
                           ✓
                         </button>
                         <button
                           onClick={() => declineConnection(req.id)}
-                          className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded transition"
+                          className="px-2 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs rounded transition"
                         >
                           ✕
                         </button>
