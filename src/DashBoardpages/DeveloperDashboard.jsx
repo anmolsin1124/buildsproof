@@ -286,7 +286,7 @@ const DeveloperDashboard = () => {
             {activeTab === 'projects' && <DeveloperProjects />}
             {activeTab === 'problems' && <DeveloperProblems />}
             {activeTab === 'analytics' && <DeveloperAnalytics />}
-            {activeTab === 'achievements' && <DeveloperAchievements />}
+            {activeTab === 'jobs' && <DeveloperFeed />}
             {activeTab === 'freelance' && <DeveloperFreelance />}
             {activeTab === 'profile' && <DeveloperProfile profileData={profileData} onProfileUpdate={handleProfileUpdate} />}
             {activeTab === 'settings' && <DeveloperSettings onLogout={handleLogout} />}

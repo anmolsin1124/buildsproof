@@ -2,13 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const logoUrl = new URL('../public/logo/file_0000000012bc7208b25009dfb0273ffb-removebg-preview.png', import.meta.url).href;
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-gray-500 bg-opacity-60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition">
-            <h1 className="text-white text-2xl font-bold">Build</h1>
-            <h1 className="text-green-400 text-2xl font-bold">Proof</h1>
+          <Link to="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition -ml-8">
+            <img src={logoUrl} alt="BuildProof Logo" className="h-16 w-auto object-contain flex-shrink-0" />
+            <div className="hidden sm:flex items-baseline gap-0.5">
+              <h1 className="text-white text-3xl font-bold">Build</h1>
+              <h1 className="text-green-400 text-3xl font-bold">Proof</h1>
+            </div>
           </Link>
           <div className="flex space-x-6 items-center gap-4 ">
             <Link to="/" className="text-white hover:text-gray-300 transition font-medium" >Home</Link>
@@ -21,7 +25,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
+  ); 
 };
 
 export default Navbar;
