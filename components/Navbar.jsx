@@ -38,7 +38,9 @@ const Navbar = () => {
               <img src={logoUrl} alt="BuildProof" className="h-9 w-auto object-contain transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-3" />
             </div>
             <div className="flex items-baseline">
-              <span className="text-grey-300 text-xl sm:text-2xl font-black tracking-tight uppercase">Build</span>
+              <span className={`text-xl sm:text-2xl font-black tracking-tight uppercase transition-colors duration-300 ${scrolled ? 'text-white' : 'text-black'}`}>
+                Build
+              </span>
               <span className="text-green-500 text-xl sm:text-2xl font-black tracking-tight uppercase relative group-hover:drop-shadow-[0_0_8px_rgba(52,211,150,0.4)] transition-all">Proof</span>
             </div>
           </Link>
@@ -72,7 +74,7 @@ const Navbar = () => {
               className="group relative inline-flex items-center justify-center px-6 py-2.5 font-bold text-white transition-all duration-300 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full hover:shadow-[0_0_20px_rgba(52,211,150,0.4)] hover:-translate-y-0.5 active:scale-95 overflow-hidden"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <span className="text-sm uppercase tracking-wider relative z-10">Get Started</span>
+              <span className="text-sm uppercase tracking-wider text-green-500 relative z-10">Get Started</span>
             </Link>
           </div>
 
