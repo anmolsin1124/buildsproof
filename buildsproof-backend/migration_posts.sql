@@ -58,12 +58,15 @@ ON public.post_likes FOR DELETE USING (auth.uid() = user_id);
 
 -- Function: increment likes_count on post_likes insert
 CREATE OR REPLACE FUNCTION public.handle_post_like_insert()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 BEGIN
   UPDATE public.posts SET likes_count = likes_count + 1 WHERE id = NEW.post_id;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER on_post_like_insert
   AFTER INSERT ON public.post_likes
@@ -71,12 +74,15 @@ CREATE TRIGGER on_post_like_insert
 
 -- Function: decrement likes_count on post_likes delete  
 CREATE OR REPLACE FUNCTION public.handle_post_like_delete()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 BEGIN
   UPDATE public.posts SET likes_count = GREATEST(likes_count - 1, 0) WHERE id = OLD.post_id;
   RETURN OLD;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER on_post_like_delete
   AFTER DELETE ON public.post_likes
