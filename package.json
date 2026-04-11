@@ -6,19 +6,27 @@
   "author": "",
   "type": "module",
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "node scripts/seed.mjs"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.2.2",
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/auth-helpers-react": "^0.15.0",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.103.0",
+    "lucide-react": "^1.8.0",
+    "next": "^16.2.3",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-icons": "^5.6.0"
+  },
+  "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
-    "parcel": "^2.16.4",
-    "postcss": "^8.5.8",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-icons": "^5.6.0",
-    "react-router-dom": "^6.30.3",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.9",
     "tailwindcss": "^4.2.2"
   }
 }

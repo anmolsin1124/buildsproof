@@ -9,6 +9,7 @@ pnpm-debug.log*
 dist
 .parcel-cache
 .cache
+.next
 
 # Environment variables
 .env
