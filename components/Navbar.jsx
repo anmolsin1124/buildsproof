@@ -28,8 +28,8 @@ const Navbar = () => {
   return (
     <div className={`fixed w-full z-50 top-0 left-0 transition-all duration-500 ${scrolled ? 'pt-2 px-4' : 'pt-4 px-4 sm:px-6 lg:px-8'}`}>
       <nav className={`mx-auto max-w-7xl rounded-full transition-all duration-500 ${scrolled
-          ? 'bg-zinc-900/80 backdrop-blur-xl shadow-2xl border border-white/10 py-1.5 px-6'
-          : 'bg-transparent border border-transparent py-4 px-2'
+        ? 'bg-zinc-900/80 backdrop-blur-xl shadow-2xl border border-white/10 py-1.5 px-6'
+        : 'bg-transparent border border-transparent py-4 px-2'
         }`}>
         <div className="flex justify-between items-center h-12 md:h-14">
           {/* Logo */}
@@ -39,7 +39,7 @@ const Navbar = () => {
             </div>
             <div className="flex items-baseline">
               <span className="text-grey-300 text-xl sm:text-2xl font-black tracking-tight uppercase">Build</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 text-xl sm:text-2xl font-black tracking-tight uppercase relative group-hover:drop-shadow-[0_0_8px_rgba(52,211,150,0.4)] transition-all">Proof</span>
+              <span className="text-green-500 text-xl sm:text-2xl font-black tracking-tight uppercase relative group-hover:drop-shadow-[0_0_8px_rgba(52,211,150,0.4)] transition-all">Proof</span>
             </div>
           </Link>
 
