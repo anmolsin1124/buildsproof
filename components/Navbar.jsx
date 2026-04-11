@@ -71,10 +71,10 @@ const Navbar = () => {
             </Link>
             <Link
               href="/auth"
-              className="group relative inline-flex items-center justify-center px-6 py-2.5 font-bold text-white transition-all duration-300 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full hover:shadow-[0_0_20px_rgba(52,211,150,0.4)] hover:-translate-y-0.5 active:scale-95 overflow-hidden"
+              className="group relative inline-flex items-center justify-center px-6 py-2.5 font-bold text-white transition-all duration-300 bg-green-500 rounded-full hover:shadow-[0_0_20px_rgba(52,211,150,0.4)] hover:-translate-y-0.5 active:scale-95 overflow-hidden"
             >
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <span className="text-sm uppercase tracking-wider text-white bg-green-500 relative z-10 px-3 py-1 rounded-lg">Get Started</span>
+              <span className="text-sm uppercase tracking-wider text-white relative z-10">Get Started</span>
             </Link>
           </div>
 
