@@ -113,20 +113,23 @@ CREATE TRIGGER on_post_update
 
 -- Auto-create profile on user signup (includes role from metadata)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, name, email, avatar_url, role)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'full_name', 'User'),
-    NEW.email,
+    COALESCE(NEW.email, NEW.raw_user_meta_data->>'email'),
     NEW.raw_user_meta_data->>'avatar_url',
     COALESCE(NEW.raw_user_meta_data->>'role', 'developer')
   )
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created

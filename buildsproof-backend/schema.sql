@@ -76,18 +76,23 @@ CREATE TRIGGER on_profile_update
 
 -- Trigger to create a profile after a user signs up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = public
+AS $$
 BEGIN
-  INSERT INTO public.profiles (id, name, email, avatar_url)
+  INSERT INTO public.profiles (id, name, email, avatar_url, role)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data->>'name', NEW.raw_user_meta_data->>'full_name', 'User'),
-    NEW.email,
-    NEW.raw_user_meta_data->>'avatar_url'
-  );
+    COALESCE(NEW.email, NEW.raw_user_meta_data->>'email'),
+    NEW.raw_user_meta_data->>'avatar_url',
+    COALESCE(NEW.raw_user_meta_data->>'role', 'developer')
+  )
+  ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
